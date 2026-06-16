@@ -21,6 +21,15 @@
             --bg-color: #f0f9ff;        /* Sky 50 - 아주 연한 하늘색 배경 */
             --white: #ffffff;
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+            /* Dark mode specific variables */
+            --dark-bg-color: #1a202c; /* Dark charcoal */
+            --dark-text-color: #e2e8f0; /* Light gray */
+            --dark-text-light: #a0aec0; /* Medium gray */
+            --dark-primary-color: #075985; /* Darker blue */
+            --dark-primary-light: #38b2ac; /* A teal for contrast */
+            --dark-primary-dark: #0c4a6e; /* Deep blue */
+            --dark-white: #2d3748; /* Darker shade for elements that were pure white */
         }
 
         * {
@@ -39,13 +48,58 @@
             color: var(--text-color);
             background-color: var(--bg-color);
             padding-top: 80px;
+            transition: background-color var(--transition), color var(--transition); /* Smooth theme transition */
             overflow-x: hidden;
         }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: var(--dark-bg-color);
+            color: var(--dark-text-color);
+        }
+        body.dark-mode .navbar {
+            background-color: rgba(26, 32, 44, 0.85);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        body.dark-mode .nav-logo { color: var(--dark-primary-light); }
+        body.dark-mode .nav-links a { color: var(--dark-text-color); }
+        body.dark-mode .nav-links a:hover { background-color: var(--dark-white); color: var(--dark-primary-light); }
+        body.dark-mode .nav-links a.active { background-color: var(--dark-primary-color); color: var(--dark-text-color); }
+        body.dark-mode .menu-toggle { color: var(--dark-text-color); }
+        body.dark-mode .nav-menu { background-color: var(--dark-white); box-shadow: -5px 0 15px rgba(0,0,0,0.3); }
+        body.dark-mode .hero { background: linear-gradient(135deg, var(--dark-primary-color) 0%, var(--dark-primary-dark) 100%); }
+        body.dark-mode .about-card, body.dark-mode .card, body.dark-mode .contact-section {
+            background: var(--dark-white); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);
+        }
+        body.dark-mode .about-card.active, body.dark-mode .card.active { box-shadow: 0 50px 100px rgba(0,0,0,0.5); }
+        body.dark-mode .card-content h3 { color: var(--dark-text-color); }
+        body.dark-mode .card-content p { color: var(--dark-text-light); }
+        body.dark-mode .section-title { color: var(--dark-text-color); }
+        body.dark-mode .btn-outline { border: 2px solid var(--dark-primary-light); color: var(--dark-primary-light); }
+        body.dark-mode .btn-outline:hover { background: var(--dark-primary-light); color: var(--dark-bg-color); }
+        body.dark-mode .btn-fill { background: var(--dark-primary-color); color: var(--dark-text-color); }
+        body.dark-mode .btn-fill:hover { background: var(--dark-primary-dark); }
+        body.dark-mode footer { border-top: 1px solid rgba(255,255,255,0.1); color: var(--dark-text-light); }
 
         /* Fade In Animation */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scroll Progress Bar */
+        .progress-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            z-index: 1002;
+        }
+        .progress-bar {
+            height: 100%;
+            background: var(--accent-color);
+            width: 0%;
         }
 
         /* Top Navigation Bar */
@@ -115,6 +169,24 @@
             background-color: var(--primary-color);
             color: var(--white);
         }
+
+        /* Dark Mode Toggle Button */
+        .dark-mode-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            color: var(--text-color);
+            cursor: pointer;
+            padding: 8px 16px;
+            border-radius: 20px;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .dark-mode-toggle:hover { background-color: var(--bg-color); color: var(--primary-color); }
+        body.dark-mode .dark-mode-toggle { color: var(--dark-text-color); }
+        body.dark-mode .dark-mode-toggle:hover { background-color: var(--dark-white); color: var(--dark-primary-light); }
 
         /* Hero Section */
         .hero {
@@ -394,11 +466,17 @@
                 padding: 1rem;
                 border-radius: 0; /* No rounded corners for full-width links */
                 font-size: 1rem;
+                width: 100%; /* Ensure it takes full width */
             }
         }
     </style>
 </head>
 <body>
+
+<!-- Scroll Progress Bar -->
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+</div>
 
 <!-- Top Navigation -->
 <nav class="navbar">
@@ -413,6 +491,11 @@
             <li><a href="#about">About</a></li>
             <li><a href="#research">Research</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li>
+                <button id="darkModeToggle" class="dark-mode-toggle" aria-label="Toggle dark mode">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </li>
         </ul>
     </div>
 </nav>
@@ -496,6 +579,57 @@
 </footer>
 
 <script>
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById('darkModeToggle');
+    const body = document.body;
+
+    // Check for saved dark mode preference on page load
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') {
+        body.classList.add('dark-mode');
+        darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+    }
+
+    darkModeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('theme', 'dark');
+            darkModeToggle.querySelector('i').classList.replace('fa-moon', 'fa-sun');
+        } else {
+            localStorage.setItem('theme', 'light');
+            darkModeToggle.querySelector('i').classList.replace('fa-sun', 'fa-moon');
+        }
+    });
+
+    // 1. 스크롤 진행 바 및 메뉴 활성화 업데이트
+    window.onscroll = function() { updateScrollEffects() };
+
+    function updateScrollEffects() {
+        // 진행 바 업데이트
+        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        document.getElementById("myBar").style.width = scrolled + "%";
+
+        // 스크롤 위치에 따른 메뉴 하이라이트
+        const sections = document.querySelectorAll("section[id], h2[id]");
+        let current = "";
+
+        sections.forEach((section) => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 150) {
+                current = section.getAttribute("id");
+            }
+        });
+
+        navLinks.forEach((a) => {
+            a.classList.remove("active");
+            if (a.getAttribute("href").includes(current)) {
+                a.classList.add("active");
+            }
+        });
+    }
+
     // Mobile menu toggle
     const menuToggle = document.querySelector('.menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
