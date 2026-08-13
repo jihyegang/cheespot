@@ -128,7 +128,7 @@
         }
 
         .menu-toggle {
-            display: none; /* Hidden by default on desktop */
+            display: flex; /* 항상 보이도록 변경 */
             background: none;
             border: none;
             font-size: 1.5rem;
@@ -416,20 +416,7 @@
             border-top: 1px solid #e2e8f0;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.5rem; }
-            .navbar { padding: 1rem 5%; } /* Keep padding consistent */
-            /* .nav-links { gap: 5px; } */ /* This will be overridden for mobile menu */
-            /* .nav-links a { padding: 6px 10px; font-size: 0.85rem; } */ /* This will be overridden for mobile menu */
-            .container { margin-top: -3rem; }
-            .contact-links { flex-direction: column; }
-            .about-card { padding: 2.5rem 1.5rem; }
-
-            .menu-toggle {
-                display: block; /* Show hamburger on mobile */
-            }
-
+       
             .nav-menu {
                 position: fixed;
                 top: 0;
@@ -469,6 +456,21 @@
                 width: 100%; /* Ensure it takes full width */
             }
         }
+
+         /* Responsive Styles */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            .navbar { padding: 1rem 5%; } /* Keep padding consistent */
+            /* .nav-links { gap: 5px; } */ /* This will be overridden for mobile menu */
+            /* .nav-links a { padding: 6px 10px; font-size: 0.85rem; } */ /* This will be overridden for mobile menu */
+            .container { margin-top: -3rem; }
+            .contact-links { flex-direction: column; }
+            .about-card { padding: 2.5rem 1.5rem; }
+
+            .menu-toggle {
+                display: block; /* Show hamburger on mobile */
+            }
+
     </style>
 </head>
 <body>
@@ -481,7 +483,7 @@
 <!-- Top Navigation -->
 <nav class="navbar">
     <a href="#" class="nav-logo">
-        <i class="fa-solid fa-vr-cardboard"></i> DXP Lab
+        <i class="fa-solid fa-vr-cardboard"></i> INTERNATIONAL DEFENSE XR
     </a>
     <button class="menu-toggle" aria-label="Toggle navigation">
         <i class="fa-solid fa-bars"></i>
