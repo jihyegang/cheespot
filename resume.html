@@ -19,7 +19,7 @@
             --text-light: #4a5568;
             --bg-color: #e0f2f7;
             --white: #ffffff;
-            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 
             /* 다크 모드 변수 */
             --dark-bg-color: #1a202c;
@@ -69,16 +69,18 @@
         body.dark-mode .nav-links a.active { background-color: var(--dark-primary-color); color: var(--dark-text-color); }
         body.dark-mode .menu-toggle { color: var(--dark-text-color); }
         body.dark-mode .hero { background: radial-gradient(circle at 50% 215px, var(--dark-primary-color) 0%, var(--dark-primary-dark) 100%); }
-        body.dark-mode .card {
+        body.dark-mode .card,
+        body.dark-mode .modal-card {
             background: var(--dark-white); box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05);
         }
-        body.dark-mode .card.active { box-shadow: 0 50px 100px rgba(0,0,0,0.5); }
-        body.dark-mode .card-content h3 { color: var(--dark-text-color); }
-        body.dark-mode .card-content p { color: var(--dark-text-light); }
+        body.dark-mode .card-content h3,
+        body.dark-mode .modal-card h3 { color: var(--dark-text-color); }
+        body.dark-mode .card-content p,
+        body.dark-mode .modal-card p { color: var(--dark-text-light); }
         body.dark-mode .section-title { color: var(--dark-text-color); }
         body.dark-mode footer { border-top: 1px solid rgba(255,255,255,0.1); color: var(--dark-text-light); }
 
-        /* 페이드 인 애니메이션 */
+        /* 애니메이션 */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -168,7 +170,6 @@
             color: var(--white);
         }
 
-        /* 다크 모드 토글 버튼 */
         .dark-mode-toggle {
             background: none;
             border: none;
@@ -189,7 +190,7 @@
             background: radial-gradient(circle at 50% 215px, var(--primary-light) 0%, var(--primary-color) 65%, var(--primary-dark) 100%);
             background-attachment: fixed;
             color: var(--white);
-            padding: 5rem 2rem 7rem;
+            padding: 4rem 2rem 4rem;
             text-align: center;
         }
 
@@ -202,19 +203,20 @@
             opacity: 0.9;
         }
 
+        /* 컨테이너 */
         .container {
-            max-width: 1100px;
-            margin: -3rem auto 5rem;
-            padding: 0 20px;
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+            padding: 3rem 20px 0;
             position: relative;
             animation: fadeInUp 0.8s ease-out forwards;
             flex: 1;
+            width: 100%;
         }
 
-        /* 3D Card 그리드 레이아웃 */
         .section-title {
-            text-align: center;
-            margin-bottom: 3rem;
+            text-align: left;
+            margin-bottom: 2rem;
             color: var(--text-color);
             font-size: 2rem;
             position: relative;
@@ -224,18 +226,21 @@
         .section-title::after {
             content: "";
             display: block;
-            width: 80px;
+            width: 60px;
             height: 4px;
             background: var(--accent-color);
-            margin: 10px auto 0;
+            margin-top: 10px;
             border-radius: 2px;
         }
 
+        /* 가로 카드 그리드 레이아웃 */
         .card-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(280px, 320px));
             gap: 2rem;
+            justify-content: start;
             margin-bottom: 3rem;
+            width: 100%;
         }
 
         .card {
@@ -247,6 +252,9 @@
             border: 1px solid rgba(0,0,0,0.02);
             cursor: pointer;
             position: relative;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
             --rx: 0deg;
             --ry: 0deg;
             --hx: 50%;
@@ -255,60 +263,154 @@
             transform-style: preserve-3d;
         }
 
-        .card.active {
-            transform: perspective(1000px) translateY(-20px) scale(1.03) rotateX(var(--rx)) rotateY(var(--ry));
-            box-shadow: 0 40px 80px rgba(0,0,0,0.25);
-            z-index: 10;
-            border: 2px solid var(--accent-color);
-        }
-
-        .card::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-                110deg,
-                transparent 25%,
-                rgba(255, 0, 150, 0.1) 35%,
-                rgba(0, 255, 255, 0.1) 45%,
-                rgba(255, 255, 255, 0.4) 50%,
-                rgba(0, 255, 255, 0.1) 55%,
-                rgba(255, 0, 150, 0.1) 65%,
-                transparent 75%
-            );
-            background-size: 250% 250%;
-            background-position: var(--hx) var(--hy);
-            mix-blend-mode: color-dodge;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            pointer-events: none;
-            border-radius: inherit;
-        }
-
-        .card.active::after {
-            opacity: 1;
+        .card:hover {
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
         }
 
         .card-content {
-            padding: 2rem;
+            padding: 1.8rem;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .card-content i {
             color: var(--accent-color);
             font-size: 2rem;
-            margin-bottom: 1rem;
+            margin-bottom: 0.8rem;
         }
 
         .card-content h3 {
-            margin-bottom: 0.8rem;
+            margin-bottom: 0.6rem;
             color: var(--text-color);
             font-size: 1.3rem;
         }
 
-        .card-content p {
+        /* 글자수 제한 (4줄 넘어가면 말줄임표 처리) */
+        .card-text-preview {
             color: var(--text-light);
             font-size: 0.95rem;
-            line-height: 1.7;
+            line-height: 1.6;
+            display: -webkit-box;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* 더보기 버튼 표시 */
+        .more-btn {
+            margin-top: auto;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding-top: 10px;
+        }
+
+        /* ----------------------------------
+           확대 강조 모달 (Modal Overlay)
+        ----------------------------------- */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-card {
+            background: var(--white);
+            width: 100%;
+            max-width: 650px;
+            max-height: 85vh;
+            border-radius: 20px;
+            padding: 2.5rem;
+            position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            transform: scale(0.85);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            border: 2px solid var(--accent-color);
+        }
+
+        .modal-overlay.active .modal-card {
+            transform: scale(1);
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.05);
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+        }
+
+        .modal-close-btn:hover {
+            background: var(--accent-color);
+            color: var(--white);
+        }
+
+        .modal-body {
+            overflow-y: auto;
+            padding-right: 10px;
+            margin-top: 1rem;
+        }
+
+        /* 모달 스크롤바 코스메틱 */
+        .modal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+        .modal-body::-webkit-scrollbar-thumb {
+            background: var(--primary-light);
+            border-radius: 3px;
+        }
+
+        .modal-body i {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-body h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .modal-body .full-content {
+            color: var(--text-light);
+            font-size: 1rem;
+            line-height: 1.8;
+            white-space: pre-line;
         }
 
         footer {
@@ -320,15 +422,12 @@
             margin-top: auto;
         }
 
-        /* 반응형 모바일 스타일 (768px 이하) */
+        /* 모바일 최적화 반응형 */
         @media (max-width: 768px) {
             .hero h1 { font-size: 2.2rem; }
             .navbar { padding: 1rem 5%; }
-            .container { margin-top: -2rem; }
 
-            .menu-toggle {
-                display: block;
-            }
+            .menu-toggle { display: block; }
 
             .nav-menu {
                 position: fixed;
@@ -346,9 +445,7 @@
                 z-index: 999;
             }
 
-            .nav-menu.menu-open {
-                right: 0;
-            }
+            .nav-menu.menu-open { right: 0; }
 
             .nav-links {
                 flex-direction: column;
@@ -356,10 +453,7 @@
                 padding: 1rem 0;
             }
 
-            .nav-links li {
-                width: 100%;
-                text-align: center;
-            }
+            .nav-links li { width: 100%; text-align: center; }
 
             .nav-links a {
                 display: block;
@@ -368,6 +462,18 @@
                 font-size: 1rem;
                 width: 100%;
             }
+
+            .card-grid {
+                justify-content: center;
+                grid-template-columns: 1fr;
+            }
+
+            .modal-card {
+                padding: 1.5rem;
+                max-height: 80vh;
+            }
+
+            .modal-body h3 { font-size: 1.4rem; }
         }
     </style>
 </head>
@@ -411,45 +517,171 @@
         <h2 class="section-title">Overview</h2>
         <div class="card-grid">
             
-            <!-- 3D 카드 1: Education -->
-            <article class="card">
+            <!-- 카드 1 -->
+            <article class="card" data-icon="fa-graduation-cap" data-title="Education">
                 <div class="card-content">
                     <i class="fa-solid fa-graduation-cap"></i>
                     <h3>Education</h3>
-                    <p>
-                        <strong>국방XR학부</strong> 재학 중<br>
-                        - 메타버스 프로그래밍<br>
-                        - 실감미디어컴퓨팅개론<br>
-                        - XR컨텐츠문화지형도
-                    </p>
+                    <div class="card-text-preview">
+                        <strong> #🎓HUSS 2026 </strong> Digital Portfolio
+                        ## AI로 연결하는 한국·일본 문화와 K-뷰티·J-뷰티
+                        이름 → 강지혜
+                        학교 / 전공 → 건양대학교 / 국방 XR
+                        
+                        팀 → 2조 오이모
+                        # 🤖 01. Culture Spot × AI 
+                        생성형 AI로 표현한 문화장소
+                        
+                        선택한 문화장소 
+                        → 야나가와 수향마을
+                        
+                        사용한 프롬프트
+                        →
+                        
+                        AI Result
+                        📷 대표 이미지
+                        
+                        수정하거나 표현에 신경 쓴 부분
+                        →
+                        
+                        # 📱 02. Digital Photo Frame App
+                        
+                        사용 도구 : Github
+                        📷 완성된 앱 화면
+                        
+                        App Link / QR Code
+                        →
+                        
+                        내가 만든 앱의 특징
+                        →
+                        
+                        # 💄 03. K-Beauty × J-Beauty
+                        
+                        화장품 리패키징 프로젝트
+                        
+                        선택한 화장품
+                        →
+                        
+                        선택한 문화장소
+                        →
+                        
+                        디자인 콘셉트
+                        →
+                        
+                        Design Process
+                        Before
+                        
+                        📷 기존 제품
+                        
+                        AI Design
+                        
+                        📷 AI 디자인
+                        
+                        Final Product
+                        
+                        📷 완성 작품
+                        
+                        문화장소의 어떤 요소를 디자인에 활용했나요?
+                        →
+                        
+                        
+                        # 👥 04. Team Project
+                        
+                        ## 팀 프로젝트
+                        
+                        팀명
+                        → 2조 오이모
+                        
+                        나의 역할
+                        → 리패키징 제품 제작 및 레퍼런스 발표
+                        
+                        📷 팀 활동 또는 발표 사진
+                        
+                        ⭐ My Best Result
+                        
+                        📷 가장 마음에 드는 결과물
+                        
+                        한 문장으로 소개하기
+                        →
+                   
+                        # 📍 05. Field Work
+                        
+                        한국 문화장소 현장 탐방
+                        
+                        방문한 장소
+                        
+                        - [ ]  돈암서원
+                        - [ ]  전주한옥마을
+                        - [ ]  인사동
+                        
+                        📷 직접 방문한 문화장소
+                        
+                        📷 대표 사진
+                        
+                        👀 현장에서 가장 인상 깊었던 점
+                        →
+                        
+                       🔎 REAL × AI × PRODUCT
+                        
+                        REAL — 실제 문화장소
+                        📷
+                        
+                        AI — AI로 표현한 문화장소
+                        📷
+                        
+                        PRODUCT — 완성한 화장품
+                        📷
+                        
+                        실제 장소와 내가 AI로 표현한 이미지에는 어떤 차이가 있었나요?
+                        →
+                        
+                        내가 만든 화장품에는 실제 장소의 특징이 어떻게 표현되어 있었나요?
+                        →
+                        
+                        # 🌱 06. 캠프 이후 연결 활동
+                        
+                        캠프가 끝난 후, 이번 캠프에서 배운 내용이나 제작한 결과물과 연결하여 새롭게 해본 활동이 있다면 자유롭게 작성해주세요.
+                        
+                        예) AI 활용, 앱 수정·확장, 새로운 디자인 제작, 관련 프로젝트 참여 등
+                        
+                        활동 내용
+                        →
+                        
+                        📷 사진, 결과물, 링크 등이 있다면 자유롭게 추가해주세요.
+                    </div>
+                    <div class="more-btn">더보기 <i class="fa-solid fa-chevron-right"></i></div>
                 </div>
             </article>
 
-            <!-- 3D 카드 2: Experience -->
-            <article class="card">
+            <!-- 카드 2 -->
+            <article class="card" data-icon="fa-briefcase" data-title="Experience">
                 <div class="card-content">
                     <i class="fa-solid fa-briefcase"></i>
                     <h3>Experience</h3>
-                    <p>
-                        <strong>공모전 / 프로젝트 활동</strong><br>
-                        - 공모전 배우 및 성우 참여<br>
-                        - Roblox Studio 기획 및 개발<br>
+                    <div class="card-text-preview">
+                        <strong>공모전 / 프로젝트 활동</strong>
+                        - 공모전 배우 및 성우 참여
+                        - Roblox Studio 기획 및 개발
                         - 백제 문화 활용 콘텐츠 기획
-                    </p>
+                        - 3D 공간 모델링 및 인터랙션 시나리오 구성
+                    </div>
+                    <div class="more-btn">더보기 <i class="fa-solid fa-chevron-right"></i></div>
                 </div>
             </article>
 
-            <!-- 3D 카드 3: Tech Stack -->
-            <article class="card">
+            <!-- 카드 3 -->
+            <article class="card" data-icon="fa-code" data-title="Skills & Tools">
                 <div class="card-content">
                     <i class="fa-solid fa-code"></i>
                     <h3>Skills & Tools</h3>
-                    <p>
-                        <strong>XR & Dev Tools</strong><br>
-                        - Roblox Studio / Lua<br>
-                        - XR System Design<br>
+                    <div class="card-text-preview">
+                        <strong>XR & Dev Tools</strong>
+                        - Roblox Studio / Lua Scripting
+                        - XR System Design & UX
                         - Acting & Voice Acting
-                    </p>
+                        - Blender 3D 기초 모델링 및 애니메이션 작업
+                    </div>
+                    <div class="more-btn">더보기 <i class="fa-solid fa-chevron-right"></i></div>
                 </div>
             </article>
 
@@ -457,18 +689,29 @@
     </section>
 </main>
 
+<!-- 강조 확대 모달 레이어 -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal-card">
+        <button class="modal-close-btn" id="modalCloseBtn"><i class="fa-solid fa-xmark"></i></button>
+        <div class="modal-body">
+            <i id="modalIcon" class="fa-solid"></i>
+            <h3 id="modalTitle"></h3>
+            <div id="modalContent" class="full-content"></div>
+        </div>
+    </div>
+</div>
+
 <footer>
     <p>&copy; 2026 Cheespot & DXP Lab. All rights reserved.</p>
 </footer>
 
 <script>
-    // DOM 요소 선택
     const darkModeToggle = document.getElementById('darkModeToggle');
     const menuToggle = document.querySelector('.menu-toggle');
     const navMenu = document.querySelector('.nav-menu');
     const body = document.body;
 
-    // 1. 다크 모드 동기화 및 토글
+    /* 1. 다크 모드 설정 */
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'dark') {
         body.classList.add('dark-mode');
@@ -488,7 +731,7 @@
         }
     });
 
-    // 2. 스크롤 프로그레스 바
+    /* 2. 스크롤 바 */
     window.addEventListener('scroll', () => {
         const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -496,7 +739,7 @@
         document.getElementById("myBar").style.width = scrolled + "%";
     });
 
-    // 3. 모바일 네비게이션 토글
+    /* 3. 모바일 네비게이션 토글 */
     menuToggle.addEventListener('click', () => {
         navMenu.classList.toggle('menu-open');
         const icon = menuToggle.querySelector('i');
@@ -504,14 +747,9 @@
         icon.classList.toggle('fa-xmark');
     });
 
-    // 4. 메인 페이지와 동일한 3D Card 기울기 및 홀로그램 애니메이션
+    /* 4. 3D Tilt 효과 */
     const cards = document.querySelectorAll('.card');
-    
     cards.forEach(card => {
-        card.addEventListener('click', () => {
-            card.classList.toggle('active');
-        });
-
         card.addEventListener('mousemove', (e) => {
             const rect = card.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -520,24 +758,50 @@
             const centerX = rect.width / 2;
             const centerY = rect.height / 2;
 
-            const rotateX = ((centerY - y) / centerY) * 15; 
-            const rotateY = ((x - centerX) / centerX) * 15;
-
-            const hX = (x / rect.width) * 100;
-            const hY = (y / rect.height) * 100;
+            const rotateX = ((centerY - y) / centerY) * 10; 
+            const rotateY = ((x - centerX) / centerX) * 10;
 
             card.style.setProperty('--rx', `${rotateX}deg`);
             card.style.setProperty('--ry', `${rotateY}deg`);
-            card.style.setProperty('--hx', `${hX}%`);
-            card.style.setProperty('--hy', `${hY}%`);
         });
 
         card.addEventListener('mouseleave', () => {
             card.style.setProperty('--rx', '0deg');
             card.style.setProperty('--ry', '0deg');
-            card.style.setProperty('--hx', '50%');
-            card.style.setProperty('--hy', '50%');
         });
+    });
+
+    /* 5. 카드 클릭 시 화면 중앙 확대 (모달) 기능 */
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalContent = document.getElementById('modalContent');
+
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            const iconClass = card.getAttribute('data-icon');
+            const titleText = card.getAttribute('data-title');
+            const fullHTML = card.querySelector('.card-text-preview').innerHTML;
+
+            modalIcon.className = `fa-solid ${iconClass}`;
+            modalTitle.textContent = titleText;
+            modalContent.innerHTML = fullHTML;
+
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+        });
+    });
+
+    // 모달 닫기
+    function closeModal() {
+        modalOverlay.classList.remove('active');
+        document.body.style.overflow = 'auto'; // 스크롤 원복
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
     });
 </script>
 </body>
