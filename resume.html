@@ -10,75 +10,89 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary-color: #0284c7;
-            --primary-light: #7dd3fc;
-            --primary-dark: #0c4a6e;
-            --accent-color: #f59e0b;
-            --text-color: #1a202c;
-            --text-light: #4a5568;
-            --bg-color: #e0f2f7;
-            --white: #ffffff;
-            --transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-
-            /* Dark mode specific variables */
-            --dark-bg-color: #0f172a;       /* 전체 배경: 깊고 선명한 딥 네이비 */
-            --dark-text-color: #f8fafc;     /* 제목/메인 텍스트: 선명하고 밝은 오프화이트 */
-            --dark-text-light: #cbd5e1;     /* 설명/본문 텍스트: 가독성이 뛰어난 연회색 */
-            --dark-primary-color: #0284c7;  /* 메인 하늘색 포인트 */
-            --dark-primary-light: #38bdf8;  /* 강조용 밝은 시안/하늘색 */
-            --dark-primary-dark: #1e293b;   /* 카드/박스 배경: 글씨가 명확히 보이는 딥 슬레이트 */
-            --dark-white: #1e293b;          /* 라이트 모드의 white 대체용 */
-          }
-        
-          /* =========================================================
-             [다크 모드 적용 방식]
-             body에 .dark-mode 클래스가 붙거나 html에 data-theme="dark" 일 때
-             기존 테마 변수 값을 다크 모드 값으로 자동 덮어씁니다.
-             ========================================================= */
-          body.dark-mode,
-          [data-theme="dark"] {
-            --bg-color: var(--dark-bg-color);
-            --text-color: var(--dark-text-color);
-            --text-light: var(--dark-text-light);
-            --primary-color: var(--dark-primary-color);
-            --primary-light: var(--dark-primary-light);
-            --primary-dark: var(--dark-primary-dark);
-            --white: var(--dark-white);
-            --card-bg: var(--dark-primary-dark);
-          }
-        
-          /* 전체 배경 및 기본 글자색 */
-          body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: var(--transition);
-          }
-        
-          /* =========================================================
-             [카드 컴포넌트 스타일 적용]
-             ========================================================= */
-          .card {
-            background-color: var(--card-bg);
-            color: var(--text-color);
-            border: 1px solid rgba(255, 255, 255, 0.05); /* 다크모드 카드 경계선 구분을 위한 은은한 테두리 */
-            transition: var(--transition);
-          }
-        
-          /* 카드 내부 제목 (대비 극대화) */
-          .card-title,
-          .card h1, .card h2, .card h3, .card h4 {
-            color: var(--text-color);
-          }
-        
-          /* 카드 내부 설명/본문 (가독성 향상 연회색) */
-          .card-description,
-          .card-text,
-          .card p,
-          .card span {
-            color: var(--text-light);
-          }
-        </style>
+      :root {
+        /* 세련된 하늘색(Sky Blue) 계열 팔레트 */
+        --primary-color: #0284c7;
+        --primary-light: #7dd3fc;
+        --primary-dark: #0c4a6e;
+        --accent-color: #f59e0b;
+        --text-color: #1a202c;
+        --text-light: #4a5568;
+        --bg-color: #e0f2f7;
+        --white: #ffffff;
+        --card-bg: #ffffff;               /* [추가] 라이트 모드 카드 배경색 명시 */
+        --card-border: rgba(0, 0, 0, 0.08);/* [추가] 라이트 모드 은은한 테두리 */
+        --transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    
+        /* Dark mode specific variables */
+        --dark-bg-color: #0f172a;       /* 전체 배경: 깊고 선명한 딥 네이비 */
+        --dark-text-color: #f8fafc;     /* 제목/메인 텍스트: 선명하고 밝은 오프화이트 */
+        --dark-text-light: #cbd5e1;     /* 설명/본문 텍스트: 가독성이 뛰어난 연회색 */
+        --dark-primary-color: #0284c7;  /* 메인 하늘색 포인트 */
+        --dark-primary-light: #38bdf8;  /* 강조용 밝은 시안/하늘색 */
+        --dark-primary-dark: #1e293b;   /* 카드/박스 배경: 글씨가 명확히 보이는 딥 슬레이트 */
+        --dark-white: #1e293b;          /* 라이트 모드의 white 대체용 */
+        --dark-card-border: rgba(255, 255, 255, 0.1);
+      }
+    
+      /* =========================================================
+         [다크 모드 적용 방식]
+         ========================================================= */
+      body.dark-mode,
+      [data-theme="dark"] {
+        --bg-color: var(--dark-bg-color);
+        --text-color: var(--dark-text-color);
+        --text-light: var(--dark-text-light);
+        --primary-color: var(--dark-primary-color);
+        --primary-light: var(--dark-primary-light);
+        --primary-dark: var(--dark-primary-dark);
+        --white: var(--dark-white);
+        --card-bg: var(--dark-primary-dark);
+        --card-border: var(--dark-card-border);
+      }
+    
+      /* 전체 배경 및 기본 글자색 */
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: var(--transition);
+      }
+    
+      /* =========================================================
+         [카드 컴포넌트 스타일 적용 - 가독성 보장]
+         ========================================================= */
+      .card {
+        background-color: var(--card-bg);
+        color: var(--text-color);
+        border: 1px solid var(--card-border);
+        transition: var(--transition);
+      }
+    
+      /* 카드 내부 모든 제목 및 부제목 */
+      .card-title,
+      .card h1, .card h2, .card h3, .card h4, .card h5, .card h6 {
+        color: var(--text-color) !important;
+      }
+    
+      /* 카드 내부 본문, 설명문, 리스트 항목 */
+      .card-description,
+      .card-text,
+      .card p,
+      .card span,
+      .card li {
+        color: var(--text-light);
+      }
+    
+      /* [추가] 카드 내부 링크, 태그 등의 글자색이 안 바뀌던 문제 방지 */
+      .card a {
+        color: var(--primary-light);
+      }
+      
+      body:not(.dark-mode) .card a,
+      :root:not([data-theme="dark"]) .card a {
+        color: var(--primary-color);
+      }
+    </style>
         * {
             box-sizing: border-box;
             margin: 0;
